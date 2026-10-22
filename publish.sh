@@ -97,11 +97,16 @@ JSON
         echo "$json" | sed 's/^/    /'
         return 0
     fi
-    local response
+    # The JSON contains ';' (changelog prose), which curl's -F parser would treat as a form
+    # parameter separator. Hand the body over as a file so it is sent verbatim.
+    local data_file response
+    data_file=$(mktemp)
+    printf '%s' "$json" > "$data_file"
     response=$(curl -sS -X POST "$MODRINTH_API/version" \
         -H "Authorization: $MODRINTH_TOKEN" \
-        -F "data=$json;type=application/json" \
-        -F "file=@$jar")
+        -F "data=<$data_file;type=application/json" \
+        -F "file=@$jar") || { rm -f "$data_file"; return 1; }
+    rm -f "$data_file"
     if echo "$response" | grep -q '"id"'; then
         echo "  modrinth: uploaded"
     else
@@ -144,11 +149,15 @@ JSON
         echo "$metadata" | sed 's/^/    /'
         return 0
     fi
-    local response
+    # Same ';' hazard as above: send the metadata as a file, not an inline -F value.
+    local metadata_file response
+    metadata_file=$(mktemp)
+    printf '%s' "$metadata" > "$metadata_file"
     response=$(curl -sS -X POST \
         "$CURSEFORGE_API/projects/$CURSEFORGE_PROJECT_ID/upload-file?token=$CURSEFORGE_TOKEN" \
-        -F "metadata=$metadata;type=application/json" \
-        -F "file=@$jar")
+        -F "metadata=<$metadata_file;type=application/json" \
+        -F "file=@$jar") || { rm -f "$metadata_file"; return 1; }
+    rm -f "$metadata_file"
     if echo "$response" | grep -q '"id"'; then
         echo "  curseforge: uploaded"
     else
