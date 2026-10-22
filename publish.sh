@@ -115,8 +115,8 @@ JSON
     fi
 }
 
-# CurseForge marks loaders as game version names, so every upload needs the loader label in
-# addition to the Minecraft versions.
+# CurseForge's `gameVersions` takes numeric ids; `gameVersionNames` takes the names shown on the
+# site, including the loader label ("Forge", "Fabric", "NeoForge").
 curseforge_loader() {
     case "$1" in
         forge) echo "Forge" ;;
@@ -140,7 +140,7 @@ upload_curseforge() {
   "changelogType": "markdown",
   "displayName": "$(json_escape "$title")",
   "releaseType": "$TYPE",
-  "gameVersions": [$(echo "$cf_versions" | sed 's/,/", "/g; s/^\(.*\)$/"\1"/')]
+  "gameVersionNames": [$(echo "$cf_versions" | sed 's/,/", "/g; s/^\(.*\)$/"\1"/')]
 }
 JSON
 )
