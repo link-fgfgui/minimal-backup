@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "description": "Minimal Backup resources",
+    "pack_format": 15,
+    "supported_formats": [15, 34]
+  }
+}

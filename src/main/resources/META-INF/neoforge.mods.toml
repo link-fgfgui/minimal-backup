@@ -1,0 +1,43 @@
+license = "${license}"
+
+modLoader = "javafml"
+loaderVersion = "[1,)"
+
+[[mods]]
+modId = "${id}"
+displayName = "${name}"
+version = "${version}"
+authors = "${authors}"
+description = "${description}"
+
+[[mixins]]
+config = "minimalbackup.1211.mixins.json"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+# Optional client UI (not embedded).
+[[dependencies.${id}]]
+modId = "uilib"
+type = "optional"
+versionRange = "[9.0.0,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.${id}]]
+modId = "architectury"
+type = "optional"
+versionRange = "[13.0.6,)"
+ordering = "AFTER"
+side = "CLIENT"

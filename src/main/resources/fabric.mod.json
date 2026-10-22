@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": [
+    "${authors}"
+  ],
+  "license": "${license}",
+  "icon": "assets/minimalbackup/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.linkfgfgui.minimalbackup.MinimalBackupFabric"
+    ],
+    "client": [
+      "io.github.linkfgfgui.minimalbackup.MinimalBackupFabricClient"
+    ]
+  },
+  "mixins": [
+    "${mixin_config}",
+    "${mixin_config_extra}"
+  ],
+  "accessWidener": "minimalbackup.ct",
+  "depends": {
+    "fabricloader": ">=${loader}",
+    "minecraft": "${minecraft}",
+    "fabric-api": "*",
+    "forgeconfigapiport": ">=${fcap}"
+  },
+  "recommends": {
+    "uilib": "${uilib_range}",
+    "architectury": "${architectury_range}"
+  }
+}

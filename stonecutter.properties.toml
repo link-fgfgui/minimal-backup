@@ -1,0 +1,67 @@
+# Centralized build parameters (https://stonecutter.kikugie.dev/wiki/config/properties)
+mod.id = "minimalbackup"
+mod.name = "Minimal Backup"
+mod.group = "io.github.linkfgfgui"
+mod.version = "0.1.0"
+mod.license = "LGPL-3.0-only"
+mod.authors = "linkfgfgui"
+mod.description = "Space-efficient NBT snapshot backups with sparse read-overlay restore."
+
+# Release targets read by publish.sh. Leave empty until the project pages exist; the uploader then
+# skips that platform instead of failing. Tokens come from the environment, never from this file.
+mod.publish_modrinth = ""
+mod.publish_curseforge = ""
+
+deps.fabric_loader = "0.19.5"
+loomx.loom_version = "1.18-SNAPSHOT"
+deps.zstd = "1.5.7-11"
+deps.mixin = "0.8.5"
+
+["1.20.1"]
+mod.mc_releases = ["1.20.1"]
+
+[fabric."1.20.1"]
+mod.mc_compat = "~1.20.1"
+deps.fabric_loader = "0.15.11"
+mixin_config_extra = "minimalbackup.empty.mixins.json"
+deps.fabric_api = "0.92.11+1.20.1"
+deps.fcap = "8.0.3"
+mixin_config = "minimalbackup.mixins.json"
+deps.uilib = "zTkzAdVf"
+deps.architectury = "9.2.14"
+mod.uilib_range = ">=0.3.6"
+mod.architectury_range = ">=9.1.12"
+
+[forge."1.20.1"]
+mod.mc_compat = "[1.20.1,1.21)"
+deps.forge_mc = "1.20.1"
+deps.forge = "47.3.0"
+deps.forge_version_range = "[47,)"
+deps.forge_loader_range = "[47,)"
+deps.uilib = "GizE27iH"
+deps.architectury = "9.2.14"
+mod.uilib_range = ">=0.3.6"
+mod.architectury_range = ">=9.1.12"
+
+["1.21.1"]
+mod.mc_releases = ["1.21", "1.21.1"]
+
+[fabric."1.21.1"]
+mod.mc_compat = ">=1.21 <=1.21.1"
+deps.fabric_loader = "0.16.10"
+mixin_config_extra = "minimalbackup.fabric.mixins.json"
+deps.fabric_api = "0.116.17+1.21.1"
+deps.fcap = "21.1.6"
+mixin_config = "minimalbackup.1211.mixins.json"
+deps.uilib = "54ffhTnM"
+deps.architectury = "13.0.6"
+mod.uilib_range = ">=9.0.0"
+mod.architectury_range = ">=13.0.6"
+
+[neoforge."1.21.1"]
+mod.mc_compat = "[1.21, 1.21.1]"
+deps.neo_loader = "21.1.251"
+deps.uilib = "9.0.0"
+deps.architectury = "13.0.6"
+mod.uilib_range = ">=9.0.0"
+mod.architectury_range = ">=13.0.6"
