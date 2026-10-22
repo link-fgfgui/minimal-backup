@@ -9,6 +9,10 @@ A lightweight Minecraft backup mod that saves **per-chunk/file Zstd deltas** ins
 
 > *Architecture details can be found in `docs/DESIGN_NOTES.md`.*
 
+**Runtime dependencies:** Fabric builds require **ForgeConfigAPIPort**; Forge and NeoForge use
+their built-in config systems. **UILib + Architectury** are optional client-side and are not
+needed on dedicated servers.
+
 ## Key Features
 
 * **Delta Storage (Space-First):** Tracks individual chunks and `.dat` files in append-only `.zpack` archives. The first block is a full copy; subsequent blocks are Zstd dictionary deltas. Untouched chunks take zero space.

@@ -37,7 +37,7 @@ Restoring a backup does **not** unzip files back into the world folder before st
 ## Licensing
 
 - Project license: **LGPL-3.0-only**. `LICENSE` carries the LGPLv3 text.
-- Third-party dependencies: zstd-jni (BSD-2-Clause) is embedded; UILib (Apache-2.0), Architectury API (LGPL-3.0-only) and ForgeConfigAPIPort (MPL-2.0) are optional runtime dependencies and are not embedded. Keep their notices when redistributing.
+- Third-party dependencies: zstd-jni (BSD-2-Clause) is embedded. ForgeConfigAPIPort (MPL-2.0) is a required Fabric runtime dependency; UILib (Apache-2.0) and Architectury API (LGPL-3.0-only) are optional client-side dependencies. None are embedded; keep their notices when redistributing.
 
 ## Future Work (v1+)
 
