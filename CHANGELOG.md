@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-10-22
 
 Initial release. Targets 1.20.1 Forge/Fabric and 1.21.1 NeoForge/Fabric.
 
@@ -116,8 +116,8 @@ Initial release. Targets 1.20.1 Forge/Fabric and 1.21.1 NeoForge/Fabric.
 
 ### Notes
 
-- Real Modrinth/CurseForge publishing is prepared (`publish.sh --dry-run` and a local mock
-  upload) but has not been performed; project ids and tokens are still pending.
+- CurseForge publishing runs from `.github/workflows/release.yml` on `v*` tags; the Modrinth
+  project id and token are still pending.
 - Non-NBT data is skipped by default. `backup.copyJson` covers world-level advancements/stats
   only; `serverconfig/`, `datapacks/` and mod-specific stores are out of scope.
 - Restore is a sparse overlay: keys absent from the snapshot pass through to the current disk.

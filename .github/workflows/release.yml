@@ -1,0 +1,98 @@
+name: Release
+
+# Publishing a tag (v0.1.0) builds all four Stonecutter nodes and uploads them to CurseForge.
+# The tag must match v<mod.version> from stonecutter.properties.toml.
+#
+# Repository settings required:
+#   secret   CURSEFORGE_TOKEN       CurseForge upload token (project -> Settings -> API tokens)
+#   variable CURSEFORGE_PROJECT_ID  numeric CurseForge project id
+#
+# A manual run publishes an existing tag; nothing is uploaded if either setting is missing.
+on:
+  push:
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to publish (for example v0.1.0)'
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish to CurseForge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.gradle/jdks
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle.kts', '**/gradle.properties', 'gradle/wrapper/**', 'stonecutter.properties.toml') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Check tag matches mod.version
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          version=$(sed -n 's/^mod\.version[[:space:]]*=[[:space:]]*"\(.*\)"/\1/p' stonecutter.properties.toml)
+          if [ "v$version" != "$TAG" ]; then
+            echo "::error::tag '$TAG' does not match mod.version '$version' (expected v$version)"
+            exit 1
+          fi
+
+      - name: Resolve zstd-jni
+        run: |
+          mkdir -p .ci
+          curl -fsSL -o .ci/zstd-jni.jar \
+            https://repo1.maven.org/maven2/com/github/luben/zstd-jni/1.5.7-11/zstd-jni-1.5.7-11.jar
+
+      - name: Engine tests
+        env:
+          ZSTD_JAR: ${{ github.workspace }}/.ci/zstd-jni.jar
+        run: ./build.sh
+
+      - name: Build all Stonecutter nodes
+        run: ./gradlew buildAndCollect --console=plain
+
+      - name: Hook tests
+        run: ./tests/test-hooks.sh
+
+      - name: Package checks
+        run: ./tests/test-package.sh
+
+      - name: Upload jars
+        uses: actions/upload-artifact@v4
+        with:
+          name: minimal-backup-release
+          path: build/libs/**/*.jar
+          if-no-files-found: error
+
+      - name: Publish to CurseForge
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          CURSEFORGE_PROJECT_ID: ${{ vars.CURSEFORGE_PROJECT_ID }}
+        run: |
+          [ -n "$CURSEFORGE_TOKEN" ] || { echo "::error::CURSEFORGE_TOKEN secret is not set"; exit 1; }
+          [ -n "$CURSEFORGE_PROJECT_ID" ] || { echo "::error::CURSEFORGE_PROJECT_ID repository variable is not set"; exit 1; }
+          ./publish.sh --type release

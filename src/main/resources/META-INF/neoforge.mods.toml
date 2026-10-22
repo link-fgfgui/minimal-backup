@@ -9,6 +9,7 @@ displayName = "${name}"
 version = "${version}"
 authors = "${authors}"
 description = "${description}"
+logoFile = "assets/${id}/icon.png"
 
 [[mixins]]
 config = "minimalbackup.1211.mixins.json"

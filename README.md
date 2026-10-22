@@ -72,6 +72,11 @@ java -cp <mod.jar> engine.cli.Main heal     <gameDir> <worldKey>              # 
 ./publish.sh
 ```
 
+Pushing a `v*` tag runs `.github/workflows/release.yml`: it checks that the tag equals
+`v` + `mod.version`, builds all four nodes, runs the test suites and uploads the jars to
+CurseForge. The workflow reads the `CURSEFORGE_TOKEN` secret and the
+`CURSEFORGE_PROJECT_ID` repository variable.
+
 ## Codec addons
 
 The engine ships `zstd/1`. A codec addon implements

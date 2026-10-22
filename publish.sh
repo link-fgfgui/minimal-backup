@@ -110,12 +110,24 @@ JSON
     fi
 }
 
+# CurseForge marks loaders as game version names, so every upload needs the loader label in
+# addition to the Minecraft versions.
+curseforge_loader() {
+    case "$1" in
+        forge) echo "Forge" ;;
+        fabric) echo "Fabric" ;;
+        neoforge) echo "NeoForge" ;;
+        *) echo "$1" ;;
+    esac
+}
+
 upload_curseforge() {
-    local jar="$1" game_versions="$2" title="$3"
+    local jar="$1" loader="$2" game_versions="$3" title="$4"
     if [ -z "$CURSEFORGE_PROJECT_ID" ] || [ -z "${CURSEFORGE_TOKEN:-}" ]; then
         echo "  curseforge: skipped (set mod.publish_curseforge and CURSEFORGE_TOKEN)"
         return 0
     fi
+    local cf_versions="$game_versions,$(curseforge_loader "$loader")"
     local metadata
     metadata=$(cat <<JSON
 {
@@ -123,7 +135,7 @@ upload_curseforge() {
   "changelogType": "markdown",
   "displayName": "$(json_escape "$title")",
   "releaseType": "$TYPE",
-  "gameVersions": [$(echo "$game_versions" | sed 's/,/", "/g; s/^\(.*\)$/"\1"/')]
+  "gameVersions": [$(echo "$cf_versions" | sed 's/,/", "/g; s/^\(.*\)$/"\1"/')]
 }
 JSON
 )
@@ -160,7 +172,7 @@ for node in 1.21.1-neoforge 1.21.1-fabric 1.20.1-forge 1.20.1-fabric; do
     version_number="$VERSION+$mc"
     title="$MOD_NAME $VERSION for Minecraft $mc ($loader)"
     upload_modrinth "$jar" "$loader" "$game_versions" "$version_number" "$title" || status=1
-    upload_curseforge "$jar" "$game_versions" "$title" || status=1
+    upload_curseforge "$jar" "$loader" "$game_versions" "$title" || status=1
 done
 
 if [ "$DRY" = 1 ]; then
