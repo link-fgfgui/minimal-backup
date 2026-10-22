@@ -25,6 +25,8 @@ public final class HookTestMain {
         System.out.println("[PASS] H7 RestoreBranch");
         TestJsonWiring.run(gameDir);
         System.out.println("[PASS] H8 JsonWiring");
+        TestPermission.run();
+        System.out.println("[PASS] H9 Permission");
         System.out.println("HOOK TESTS PASSED in " + ((System.nanoTime() - start) / 1_000_000L) + " ms");
     }
 }

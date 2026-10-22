@@ -32,12 +32,12 @@ public final class FabricNetwork {
         ServerPlayNetworking.registerGlobalReceiver(BackupRequestPayload.TYPE,
                 (payload, context) -> context.server().execute(() -> {
                     ServerPlayer player = context.player();
-                    if (!player.hasPermissions(2)) {
-                        player.connection.disconnect(Component.literal(
-                                "Minimal Backup: permission level 2 required"));
+                    BackupRequest request = payload.request();
+                    if (!BackupService.isAllowed(player, request.action())) {
+                        player.connection.disconnect(
+                                Component.literal(BackupService.PERMISSION_MESSAGE));
                         return;
                     }
-                    BackupRequest request = payload.request();
                     BackupResponse response = request.action() == BackupRequest.Action.CREATE
                             ? BackupService.create(player.getServer(), request.name(),
                                     BackupService.identity(player))

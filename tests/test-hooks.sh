@@ -58,7 +58,7 @@ echo "[H] javac --release 21 (main + hook tests)"
 javac --release 21 -Xlint:all,-classfile -Werror -cp "$CP" -d "$MAIN_OUT" "${MAIN_SRC[@]}"
 javac --release 21 -Xlint:all,-classfile -Werror -cp "$CP:$MAIN_OUT" -d "$TEST_OUT" "${TEST_SRC[@]}"
 
-echo "[H3-H6] running hook tests against $(basename "$MC_JAR")"
+echo "[H3-H9] running hook tests against $(basename "$MC_JAR")"
 # No Log4j2 provider is on this classpath; silence the API's "could not find a provider" status line.
 java -Dlog4j2.statusLoggerLevel=OFF -cp "$CP:$MAIN_OUT:$TEST_OUT" \
     io.github.linkfgfgui.minimalbackup.server.HookTestMain

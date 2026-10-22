@@ -2,6 +2,7 @@ package io.github.linkfgfgui.minimalbackup;
 
 import io.github.linkfgfgui.minimalbackup.client.ClientOptions;
 import io.github.linkfgfgui.minimalbackup.client.ClientTasks;
+import io.github.linkfgfgui.minimalbackup.client.QuickBackup;
 import io.github.linkfgfgui.minimalbackup.client.RestoreReconnect;
 import io.github.linkfgfgui.minimalbackup.client.ThumbnailCapture;
 import io.github.linkfgfgui.minimalbackup.client.TreeUi;
@@ -28,6 +29,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public final class MinimalBackupNeoForgeClient {
     private static final boolean UI_LIB = ModList.get().isLoaded("uilib");
     private static KeyMapping timeTree;
+    private static KeyMapping createBackup;
 
     private MinimalBackupNeoForgeClient() {
     }
@@ -43,8 +45,10 @@ public final class MinimalBackupNeoForgeClient {
             if (!response.ok()) {
                 RestoreReconnect.cancel();
             }
-            if (UI_LIB) {
-                TreeUi.accept(response);
+            if (UI_LIB && TreeUi.accept(response)) {
+                QuickBackup.discard();
+            } else {
+                QuickBackup.show(response);
             }
         };
         RestoreReconnect.worldOpener = id -> Minecraft.getInstance().createWorldOpenFlows()
@@ -65,6 +69,8 @@ public final class MinimalBackupNeoForgeClient {
         timeTree = new KeyMapping("key.minimalbackup.time_tree", key.getType(), key.getValue(),
                 "key.categories.minimalbackup");
         event.register(timeTree);
+        createBackup = ClientOptions.createBackupMapping();
+        event.register(createBackup);
     }
 
     private static void openScreen() {
@@ -90,6 +96,9 @@ public final class MinimalBackupNeoForgeClient {
         public static void onClientTick(ClientTickEvent.Post event) {
             while (timeTree != null && timeTree.consumeClick()) {
                 openScreen();
+            }
+            while (createBackup != null && createBackup.consumeClick()) {
+                QuickBackup.create();
             }
             ClientTasks.tick();
             RestoreReconnect.tick();

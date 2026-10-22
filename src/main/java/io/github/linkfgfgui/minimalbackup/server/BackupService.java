@@ -2,6 +2,7 @@ package io.github.linkfgfgui.minimalbackup.server;
 
 import io.github.linkfgfgui.minimalbackup.config.ConfigHolder;
 import io.github.linkfgfgui.minimalbackup.engine.Compactor;
+import io.github.linkfgfgui.minimalbackup.engine.Log;
 import io.github.linkfgfgui.minimalbackup.engine.Snapshot;
 import io.github.linkfgfgui.minimalbackup.ui.BackupRequest;
 import io.github.linkfgfgui.minimalbackup.ui.BackupResponse;
@@ -22,7 +23,33 @@ import net.minecraft.world.level.storage.LevelResource;
  * whose message is suitable for chat and for the GUI.
  */
 public final class BackupService {
+    /** Vanilla permission level required for every action that changes the vault or world. */
+    public static final int REQUIRED_PERMISSION = 2;
+    public static final String PERMISSION_MESSAGE =
+            "Minimal Backup: permission level " + REQUIRED_PERMISSION + " required";
+
     private BackupService() {
+    }
+
+    /** Listing and status do not touch the vault, so they stay open to every player. */
+    public static boolean isReadOnly(BackupRequest.Action action) {
+        return action == BackupRequest.Action.LIST
+                || action == BackupRequest.Action.STATUS;
+    }
+
+    /**
+     * Packet entry authorization. Read-only requests are always allowed; everything else needs
+     * {@link #REQUIRED_PERMISSION}. Denials are logged once per request; the caller decides
+     * whether to disconnect.
+     */
+    public static boolean isAllowed(ServerPlayer player, BackupRequest.Action action) {
+        if (isReadOnly(action) || (player != null && player.hasPermissions(REQUIRED_PERMISSION))) {
+            return true;
+        }
+        Log.LOGGER.warn("minimalbackup: denied {} for {} ({})", action,
+                player == null ? "<unknown>" : player.getName().getString(),
+                player == null ? "<unknown>" : player.getUUID());
+        return false;
     }
 
     public static BackupResponse handle(MinecraftServer server, BackupRequest request) {

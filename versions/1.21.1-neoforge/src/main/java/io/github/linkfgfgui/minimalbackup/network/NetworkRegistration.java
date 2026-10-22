@@ -26,12 +26,11 @@ public final class NetworkRegistration {
                     if (!(context.player() instanceof ServerPlayer player)) {
                         return;
                     }
-                    if (!player.hasPermissions(2)) {
-                        context.disconnect(Component.literal(
-                                "Minimal Backup: permission level 2 required"));
+                    BackupRequest request = payload.request();
+                    if (!BackupService.isAllowed(player, request.action())) {
+                        context.disconnect(Component.literal(BackupService.PERMISSION_MESSAGE));
                         return;
                     }
-                    BackupRequest request = payload.request();
                     BackupResponse response = request.action() == BackupRequest.Action.CREATE
                             ? BackupService.create(player.getServer(), request.name(),
                                     BackupService.identity(player))

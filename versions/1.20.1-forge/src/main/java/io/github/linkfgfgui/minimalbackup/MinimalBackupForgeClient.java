@@ -2,6 +2,7 @@ package io.github.linkfgfgui.minimalbackup;
 
 import io.github.linkfgfgui.minimalbackup.client.ClientOptions;
 import io.github.linkfgfgui.minimalbackup.client.ClientTasks;
+import io.github.linkfgfgui.minimalbackup.client.QuickBackup;
 import io.github.linkfgfgui.minimalbackup.client.RestoreReconnect;
 import io.github.linkfgfgui.minimalbackup.client.ThumbnailCapture;
 import io.github.linkfgfgui.minimalbackup.client.TreeUi;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public final class MinimalBackupForgeClient {
     private static final boolean UI_LIB = ModList.get().isLoaded("uilib");
     private static KeyMapping timeTree;
+    private static KeyMapping createBackup;
 
     private MinimalBackupForgeClient() {
     }
@@ -45,8 +47,10 @@ public final class MinimalBackupForgeClient {
                 if (!response.ok()) {
                     RestoreReconnect.cancel();
                 }
-                if (UI_LIB) {
-                    TreeUi.accept(response);
+                if (UI_LIB && TreeUi.accept(response)) {
+                    QuickBackup.discard();
+                } else {
+                    QuickBackup.show(response);
                 }
             };
             UiBridge.opener = () -> Minecraft.getInstance().execute(() -> {
@@ -76,6 +80,8 @@ public final class MinimalBackupForgeClient {
             timeTree = new KeyMapping("key.minimalbackup.time_tree", key.getType(), key.getValue(),
                     "key.categories.minimalbackup");
             event.register(timeTree);
+            createBackup = ClientOptions.createBackupMapping();
+            event.register(createBackup);
         }
     }
 
@@ -89,6 +95,9 @@ public final class MinimalBackupForgeClient {
             if (event.phase == TickEvent.Phase.END) {
                 while (timeTree != null && timeTree.consumeClick()) {
                     UiBridge.open();
+                }
+                while (createBackup != null && createBackup.consumeClick()) {
+                    QuickBackup.create();
                 }
                 ClientTasks.tick();
                 RestoreReconnect.tick();

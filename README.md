@@ -14,7 +14,7 @@ A lightweight Minecraft backup mod that saves **per-chunk/file Zstd deltas** ins
 * **Delta Storage (Space-First):** Tracks individual chunks and `.dat` files in append-only `.zpack` archives. The first block is a full copy; subsequent blocks are Zstd dictionary deltas. Untouched chunks take zero space.
 * **Fast, Copy-Free Restores:** Restoring does not unzip files beforehand. It intercepts game reads to serve snapshot data directly, falling through to disk for untouched data.
 * **In-Process Server Swap:** On dedicated servers, restoring boots a fresh server instance in the same JVM while holding player connections open with a heartbeat. Modded clients reconnect automatically. Integrated (single-player) servers use the same connection hold while the old server stops, then the client quietly reloads the world, so the vanilla "connection lost" screen never appears.
-* **Server-Side & Optional UI:** Vanilla clients can join freely. Modded clients can press **`F9`** (or `/backup ui` in single-player) for the visual **Time Tree**; it needs **UILib** + **Architectury** (`0.3.6` + `9.2.14` on 1.20.1, `9.0.0` + `13.0.6` on 1.21.1). Without them the client shows a chat hint and `/backup` commands still work.
+* **Server-Side & Optional UI:** Vanilla clients can join freely. Modded clients can press **`F9`** (or `/backup ui` in single-player) for the visual **Time Tree**; it needs **UILib** + **Architectury** (`0.3.6` + `9.2.14` on 1.20.1, `9.0.0` + `13.0.6` on 1.21.1). Without them the client shows a chat hint and `/backup` commands still work. Players below permission level 2 get a read-only tree: list and status are available, while create/restore/rename/delete/verify are disabled and the server rejects those requests. A second key binding, **unbound by default**, creates a snapshot immediately using the default timestamp title; bind it in the vanilla controls screen if you want one-key backups.
 
 ## Commands (Requires OP Level 2)
 
@@ -142,7 +142,7 @@ this repository and are no longer maintained; their measurements are kept only a
 ./build.sh                       # engine + node parity: javac -Werror + E0-E15 + H0/H1
 ./tests/test-node-parity.sh      # every capture mixin exists on all four nodes with the same hooks
 ./tests/test-package.sh          # packaged jars: Forge refmap, Fabric loader floors, mixin configs
-./tests/test-hooks.sh            # hook layer against a real Minecraft artifact: H3-H8
+./tests/test-hooks.sh            # hook layer against a real Minecraft artifact: H3-H9
 ./tests/test-config-parity.sh    # all four spec builders come from ConfigSchema
 ```
 

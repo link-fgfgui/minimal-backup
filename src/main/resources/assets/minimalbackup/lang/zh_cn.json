@@ -1,6 +1,7 @@
 {
   "key.categories.minimalbackup": "Minimal Backup",
   "key.minimalbackup.time_tree": "打开时间树",
+  "key.minimalbackup.create_backup": "创建备份",
   "minimalbackup.ui.title": "备份时间树",
   "minimalbackup.ui.done": "完成",
   "minimalbackup.config.title": "设置",

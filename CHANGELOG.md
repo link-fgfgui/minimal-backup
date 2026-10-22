@@ -31,7 +31,10 @@ Initial release. Targets 1.20.1 Forge/Fabric and 1.21.1 NeoForge/Fabric.
 - Optional UILib time tree on all four nodes (UILib 0.3.6 + Architectury 9.2.14 on 1.20.1,
   UILib 9.0.0 + Architectury 13.0.6 on 1.21.1) with create/rename/verify/delete/restore/GC
   actions. The vanilla list screen was removed; the tree's Config button edits the `ui.*`
-  options, and the screen talks to the server through `UiBridge`.
+  options, and the screen talks to the server through `UiBridge`. Below permission level 2 the
+  tree is read-only (list/status); create/restore/rename/delete/verify are disabled in the client
+  and rejected by the server. An unbound-by-default key binding creates a snapshot with the
+  default timestamp title without opening the tree.
 - Offline CLI: `list`, `rollback` (rebuilds `region/`, `entities/`, `poi/` and
   custom-dimension `.mca` files from per-chunk blocks), `compact` and `heal`.
 - Stable codec API: `engine/api/CodecProvider` (`codecId`, `compressFull`,

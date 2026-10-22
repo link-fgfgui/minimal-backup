@@ -1,6 +1,7 @@
 {
   "key.categories.minimalbackup": "Minimal Backup",
   "key.minimalbackup.time_tree": "Open time tree",
+  "key.minimalbackup.create_backup": "Create backup",
   "minimalbackup.ui.title": "Backup time tree",
   "minimalbackup.ui.done": "Done",
   "minimalbackup.config.title": "Config",

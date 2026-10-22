@@ -15,6 +15,7 @@ import com.daqem.uilib.client.gui.texture.Texture;
 import com.daqem.uilib.client.gui.text.Text;
 import com.mojang.authlib.GameProfile;
 import io.github.linkfgfgui.minimalbackup.engine.Snapshot;
+import io.github.linkfgfgui.minimalbackup.server.BackupService;
 import io.github.linkfgfgui.minimalbackup.server.UiBridge;
 import io.github.linkfgfgui.minimalbackup.ui.BackupRequest;
 import io.github.linkfgfgui.minimalbackup.ui.BackupResponse;
@@ -26,8 +27,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -63,6 +62,7 @@ public final class TimeTreeScreen extends AbstractScreen {
     private final List<UiText.Line> notice = new ArrayList<>();
     private ConfirmDialog dialog;
     private TreeButton configButton;
+    private TreeButton createButton;
     private TreeButton restoreButton;
     private TreeButton renameButton;
     private TreeButton verifyButton;
@@ -96,7 +96,8 @@ public final class TimeTreeScreen extends AbstractScreen {
 
     @Override
     public void onTickScreen(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        // No animation in v0.
+        // No animation in v0; keep the OP-only buttons in sync if the player is opped/de-opped.
+        updateButtons();
     }
 
     @Override
@@ -162,7 +163,8 @@ public final class TimeTreeScreen extends AbstractScreen {
         int first = TREE_Y + treeHeight + 6;
         footerTop = first;
         int second = first + 22;
-        addButton(10, first, Component.translatable("minimalbackup.ui.create"), this::askCreate);
+        createButton = addButton(10, first,
+                Component.translatable("minimalbackup.ui.create"), this::askCreate);
         restoreButton = addButton(10 + (BUTTON_WIDTH + GAP), first,
                 Component.translatable("minimalbackup.ui.restore"), this::askRestore);
         renameButton = addButton(10 + (BUTTON_WIDTH + GAP) * 2, first,
@@ -179,15 +181,26 @@ public final class TimeTreeScreen extends AbstractScreen {
         updateButtons();
     }
 
-    /** Actions that need a target snapshot are disabled until one is selected. */
+    /** Create plus every selected-snapshot action needs OP 2, including read-only verify. */
     private void updateButtons() {
         boolean has = !selected.isEmpty();
+        boolean canModify = canModify();
+        if (createButton != null) {
+            createButton.setEnabled(canModify);
+        }
         for (TreeButton button : new TreeButton[]{
                 restoreButton, renameButton, verifyButton, deleteButton}) {
             if (button != null) {
-                button.setEnabled(has);
+                button.setEnabled(canModify && has);
             }
         }
+    }
+
+    /** The client's synced vanilla permission level; the server re-checks it on every packet. */
+    private static boolean canModify() {
+        Minecraft client = Minecraft.getInstance();
+        return client.player != null
+                && client.player.hasPermissions(BackupService.REQUIRED_PERMISSION);
     }
 
     /**
@@ -195,25 +208,35 @@ public final class TimeTreeScreen extends AbstractScreen {
      * reopens the tree once the server has created the snapshot.
      */
     private void askCreate() {
+        if (!canModify()) {
+            return;
+        }
         openNameDialog(Component.translatable("minimalbackup.ui.dialog.create.title"),
                 Component.translatable("minimalbackup.ui.dialog.create.message"),
-                Component.translatable("minimalbackup.ui.create.default", defaultName()).getString(),
+                Component.translatable("minimalbackup.ui.create.default",
+                        ClientOptions.defaultBackupName()).getString(),
                 this::createWithCover);
     }
 
     private void askVerify() {
+        if (!canModify()) {
+            return;
+        }
         request(new BackupRequest(BackupRequest.Action.VERIFY, selected, "", false));
     }
 
     private void askRename() {
+        if (!canModify()) {
+            return;
+        }
         String slot = selected;
         String current = snapshots.stream()
                 .filter(snapshot -> snapshot.slot().equals(slot))
                 .map(Snapshot::displayName)
                 .filter(name -> !name.isEmpty())
                 .findFirst()
-                .orElseGet(() -> Component.translatable(
-                        "minimalbackup.ui.create.default", defaultName()).getString());
+                .orElseGet(() -> Component.translatable("minimalbackup.ui.create.default",
+                        ClientOptions.defaultBackupName()).getString());
         openNameDialog(Component.translatable("minimalbackup.ui.dialog.rename.title"),
                 Component.translatable("minimalbackup.ui.dialog.rename.message"),
                 current,
@@ -232,12 +255,8 @@ public final class TimeTreeScreen extends AbstractScreen {
                 .orElse(slot);
     }
 
-    private static String defaultName() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    }
-
     private void createWithCover(String name) {
-        if (Minecraft.getInstance().player == null) {
+        if (!canModify() || Minecraft.getInstance().player == null) {
             return;
         }
         request(new BackupRequest(BackupRequest.Action.CREATE, "", name, false));
@@ -428,6 +447,9 @@ public final class TimeTreeScreen extends AbstractScreen {
     }
 
     private void askRestore() {
+        if (!canModify()) {
+            return;
+        }
         String slot = selected;
         openDialog(Component.translatable("minimalbackup.ui.dialog.restore.title"),
                 Component.translatable("minimalbackup.ui.dialog.restore.message", label(slot)),
@@ -435,6 +457,9 @@ public final class TimeTreeScreen extends AbstractScreen {
     }
 
     private void askDelete() {
+        if (!canModify()) {
+            return;
+        }
         String slot = selected;
         openDialog(Component.translatable("minimalbackup.ui.dialog.delete.title"),
                 Component.translatable("minimalbackup.ui.dialog.delete.message"),

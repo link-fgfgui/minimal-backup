@@ -23,12 +23,12 @@ public final class FabricNetwork {
                 (server, player, handler, buf, responseSender) -> {
                     BackupRequestMessage message = BackupRequestMessage.decode(buf);
                     server.execute(() -> {
-                        if (!player.hasPermissions(2)) {
-                            player.connection.disconnect(Component.literal(
-                                    "Minimal Backup: permission level 2 required"));
+                        BackupRequest request = message.request();
+                        if (!BackupService.isAllowed(player, request.action())) {
+                            player.connection.disconnect(
+                                    Component.literal(BackupService.PERMISSION_MESSAGE));
                             return;
                         }
-                        BackupRequest request = message.request();
                         BackupResponse response = request.action() == BackupRequest.Action.CREATE
                                 ? BackupService.create(server, request.name(),
                                         BackupService.identity(player))

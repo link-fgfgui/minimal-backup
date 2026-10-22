@@ -27,7 +27,7 @@ Restoring a backup does **not** unzip files back into the world folder before st
 
 #### UI, Commands, and Offline CLI
 * **Commands**: Controlled via `/backup` (`create`, `restore`, `list`, `verify`, `delete`, `gc`, `baseline`, etc.). Requires OP permission (Level 2).
-* **GUI**: Opened via `F9` or `/backup ui` (single-player). The UILib node-based **TimeTree screen** is the only client UI and is available on all four nodes (UILib 0.3.6 / Architectury 9.2.14 on 1.20.1, UILib 9.0.0 / Architectury 13.0.6 on 1.21.1); without UILib the client shows a chat hint and commands still work. The config screen opens from the tree's Config button.
+* **GUI**: Opened via `F9` or `/backup ui` (single-player). The UILib node-based **TimeTree screen** is the only client UI and is available on all four nodes (UILib 0.3.6 / Architectury 9.2.14 on 1.20.1, UILib 9.0.0 / Architectury 13.0.6 on 1.21.1); without UILib the client shows a chat hint and commands still work. The tree is read-only below permission level 2 (list/status); create/restore/rename/delete/verify are disabled client-side and re-checked by the server. A second key binding (unbound by default) creates a snapshot with the default timestamp title without opening the tree. The config screen opens from the tree's Config button.
 * **Standalone CLI**: Because the engine is pure Java, the mod Jar can be run from the command line outside of Minecraft to inspect, compact, heal, or roll back worlds offline.
 
 #### Deliberate Limitations (What it *Doesn't* Do)
