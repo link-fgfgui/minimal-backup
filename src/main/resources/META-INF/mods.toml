@@ -32,9 +32,3 @@ versionRange = "${uilib_range}"
 ordering = "AFTER"
 side = "CLIENT"
 
-[[dependencies.${mod_id}]]
-modId = "architectury"
-mandatory = false
-versionRange = "${architectury_range}"
-ordering = "AFTER"
-side = "CLIENT"

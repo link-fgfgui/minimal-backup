@@ -136,7 +136,6 @@ tasks {
             register("mixin_config", sc.properties["mixin_config"])
             register("mixin_config_extra", sc.properties["mixin_config_extra"])
             register("uilib_range", sc.properties["mod.uilib_range"])
-            register("architectury_range", sc.properties["mod.architectury_range"])
         }
 
         filesMatching("fabric.mod.json") { expand(props) }

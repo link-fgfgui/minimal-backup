@@ -30,7 +30,6 @@ mixin_config = "minimalbackup.mixins.json"
 deps.uilib = "zTkzAdVf"
 deps.architectury = "9.2.14"
 mod.uilib_range = ">=0.3.6"
-mod.architectury_range = ">=9.1.12"
 
 [forge."1.20.1"]
 mod.mc_compat = "[1.20.1,1.21)"
@@ -41,7 +40,6 @@ deps.forge_loader_range = "[47,)"
 deps.uilib = "GizE27iH"
 deps.architectury = "9.2.14"
 mod.uilib_range = ">=0.3.6"
-mod.architectury_range = ">=9.1.12"
 
 ["1.21.1"]
 mod.mc_releases = ["1.21", "1.21.1"]
@@ -56,7 +54,6 @@ mixin_config = "minimalbackup.1211.mixins.json"
 deps.uilib = "54ffhTnM"
 deps.architectury = "13.0.6"
 mod.uilib_range = ">=9.0.0"
-mod.architectury_range = ">=13.0.6"
 
 [neoforge."1.21.1"]
 mod.mc_compat = "[1.21, 1.21.1]"
@@ -64,4 +61,3 @@ deps.neo_loader = "21.1.251"
 deps.uilib = "9.0.0"
 deps.architectury = "13.0.6"
 mod.uilib_range = ">=9.0.0"
-mod.architectury_range = ">=13.0.6"

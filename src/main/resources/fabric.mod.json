@@ -30,7 +30,6 @@
     "forgeconfigapiport": ">=${fcap}"
   },
   "recommends": {
-    "uilib": "${uilib_range}",
-    "architectury": "${architectury_range}"
+    "uilib": "${uilib_range}"
   }
 }

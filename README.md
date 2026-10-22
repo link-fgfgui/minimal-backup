@@ -10,15 +10,15 @@ A lightweight Minecraft backup mod that saves **per-chunk/file Zstd deltas** ins
 > *Architecture details can be found in `docs/DESIGN_NOTES.md`.*
 
 **Runtime dependencies:** Fabric builds require **ForgeConfigAPIPort**; Forge and NeoForge use
-their built-in config systems. **UILib + Architectury** are optional client-side and are not
-needed on dedicated servers.
+their built-in config systems. **UILib** is optional client-side and is not needed on dedicated
+servers.
 
 ## Key Features
 
 * **Delta Storage (Space-First):** Tracks individual chunks and `.dat` files in append-only `.zpack` archives. The first block is a full copy; subsequent blocks are Zstd dictionary deltas. Untouched chunks take zero space.
 * **Fast, Copy-Free Restores:** Restoring does not unzip files beforehand. It intercepts game reads to serve snapshot data directly, falling through to disk for untouched data.
 * **In-Process Server Swap:** On dedicated servers, restoring boots a fresh server instance in the same JVM while holding player connections open with a heartbeat. Modded clients reconnect automatically. Integrated (single-player) servers use the same connection hold while the old server stops, then the client quietly reloads the world, so the vanilla "connection lost" screen never appears.
-* **Server-Side & Optional UI:** Vanilla clients can join freely. Modded clients can press **`F9`** (or `/backup ui` in single-player) for the visual **Time Tree**; it needs **UILib** + **Architectury** (`0.3.6` + `9.2.14` on 1.20.1, `9.0.0` + `13.0.6` on 1.21.1). Without them the client shows a chat hint and `/backup` commands still work. Players below permission level 2 get a read-only tree: list and status are available, while create/restore/rename/delete/verify are disabled and the server rejects those requests. A second key binding, **unbound by default**, creates a snapshot immediately using the default timestamp title; bind it in the vanilla controls screen if you want one-key backups.
+* **Server-Side & Optional UI:** Vanilla clients can join freely. Modded clients can press **`F9`** (or `/backup ui` in single-player) for the visual **Time Tree**; it needs **UILib** (`0.3.6` on 1.20.1, `9.0.0` on 1.21.1). Without it the client shows a chat hint and `/backup` commands still work. Players below permission level 2 get a read-only tree: list and status are available, while create/restore/rename/delete/verify are disabled and the server rejects those requests. A second key binding, **unbound by default**, creates a snapshot immediately using the default timestamp title; bind it in the vanilla controls screen if you want one-key backups.
 
 ## Commands (Requires OP Level 2)
 

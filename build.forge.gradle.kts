@@ -108,8 +108,7 @@ tasks {
             "mod_version" to prop("mod.version"),
             "mod_authors" to prop("mod.authors"),
             "mod_description" to prop("mod.description"),
-            "uilib_range" to prop("mod.uilib_range"),
-            "architectury_range" to prop("mod.architectury_range")
+            "uilib_range" to prop("mod.uilib_range")
         )
         inputs.properties(replaceProperties)
         filesMatching("META-INF/mods.toml") { expand(replaceProperties) }

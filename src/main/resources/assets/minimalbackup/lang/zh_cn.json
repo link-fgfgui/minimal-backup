@@ -16,7 +16,7 @@
   "minimalbackup.ui.rename": "改名",
   "minimalbackup.ui.refresh": "刷新",
   "minimalbackup.ui.working": "处理中…",
-  "minimalbackup.ui.no_uilib": "安装 UILib + Architectury 后可使用时间树；/backup 指令仍然可用。",
+  "minimalbackup.ui.no_uilib": "安装 UILib 后可使用时间树；/backup 指令仍然可用。",
   "minimalbackup.ui.empty": "还没有快照。改动后新建一个。",
   "minimalbackup.ui.dialog.cancel": "取消",
   "minimalbackup.ui.dialog.confirm": "确定",

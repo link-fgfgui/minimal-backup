@@ -35,10 +35,3 @@ type = "optional"
 versionRange = "[9.0.0,)"
 ordering = "AFTER"
 side = "CLIENT"
-
-[[dependencies.${id}]]
-modId = "architectury"
-type = "optional"
-versionRange = "[13.0.6,)"
-ordering = "AFTER"
-side = "CLIENT"

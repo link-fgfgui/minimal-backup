@@ -4,6 +4,13 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Architectury API is no longer declared as a prerequisite; UILib is the only optional client
+  dependency (future UILib versions drop Architectury).
+
 ## [0.1.0] - 2026-10-22
 
 Initial release. Targets 1.20.1 Forge/Fabric and 1.21.1 NeoForge/Fabric.

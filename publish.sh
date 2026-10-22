@@ -126,11 +126,10 @@ curseforge_loader() {
     esac
 }
 
-# CurseForge file relations. Fabric requires ForgeConfigAPIPort; the optional time tree needs
-# UILib and its Architectury API dependency on every loader.
+# CurseForge file relations. Fabric requires ForgeConfigAPIPort; the optional time tree needs UILib.
 curseforge_relations() {
     local loader="$1"
-    local projects='{"slug":"ui","type":"optionalDependency"},{"slug":"architectury-api","type":"optionalDependency"}'
+    local projects='{"slug":"ui","type":"optionalDependency"}'
     if [ "$loader" = "fabric" ]; then
         projects="{\"slug\":\"forge-config-api-port\",\"type\":\"requiredDependency\"},$projects"
     fi

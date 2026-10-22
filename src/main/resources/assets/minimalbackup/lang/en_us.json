@@ -16,7 +16,7 @@
   "minimalbackup.ui.rename": "Rename",
   "minimalbackup.ui.refresh": "Refresh",
   "minimalbackup.ui.working": "Working...",
-  "minimalbackup.ui.no_uilib": "Install UILib + Architectury to use the time tree; /backup commands still work.",
+  "minimalbackup.ui.no_uilib": "Install UILib to use the time tree; /backup commands still work.",
   "minimalbackup.ui.empty": "No snapshots yet. Create one after making changes.",
   "minimalbackup.ui.dialog.cancel": "Cancel",
   "minimalbackup.ui.dialog.confirm": "Confirm",
