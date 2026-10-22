@@ -6,7 +6,7 @@ set -u
 cd "$(dirname "$0")/.."
 fail=0
 
-forge=$(ls build/libs/*/minimalbackup-forge-*.jar 2>/dev/null | head -1)
+forge=$(ls build/libs/*/minimalbackup-forge-*.jar 2>/dev/null | grep -v -- '-sources' | head -1)
 if [ -n "$forge" ]; then
     if ! unzip -p "$forge" minimalbackup.mixins.json | grep -q '"refmap": "minimalbackup.refmap.json"'; then
         echo "FAIL $forge: mixin config does not name the refmap"
