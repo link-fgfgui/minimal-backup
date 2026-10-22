@@ -126,6 +126,17 @@ curseforge_loader() {
     esac
 }
 
+# CurseForge file relations. Fabric requires ForgeConfigAPIPort; the optional time tree needs
+# UILib and its Architectury API dependency on every loader.
+curseforge_relations() {
+    local loader="$1"
+    local projects='{"slug":"ui","type":"optionalDependency"},{"slug":"architectury-api","type":"optionalDependency"}'
+    if [ "$loader" = "fabric" ]; then
+        projects="{\"slug\":\"forge-config-api-port\",\"type\":\"requiredDependency\"},$projects"
+    fi
+    printf '{"projects":[%s]}' "$projects"
+}
+
 upload_curseforge() {
     local jar="$1" loader="$2" game_versions="$3" title="$4"
     if [ -z "$CURSEFORGE_PROJECT_ID" ] || [ -z "${CURSEFORGE_TOKEN:-}" ]; then
@@ -141,7 +152,8 @@ upload_curseforge() {
   "changelogType": "markdown",
   "displayName": "$(json_escape "$title")",
   "releaseType": "$TYPE",
-  "gameVersionNames": [$(echo "$cf_versions" | sed 's/,/", "/g; s/^\(.*\)$/"\1"/')]
+  "gameVersionNames": [$(echo "$cf_versions" | sed 's/,/", "/g; s/^\(.*\)$/"\1"/')],
+  "relations": $(curseforge_relations "$loader")
 }
 JSON
 )
