@@ -116,7 +116,7 @@ JSON
 }
 
 # CurseForge's `gameVersions` takes numeric ids; `gameVersionNames` takes the names shown on the
-# site, including the loader label ("Forge", "Fabric", "NeoForge").
+# site, including the environment ("Client"/"Server") and loader ("Forge"/"Fabric"/"NeoForge").
 curseforge_loader() {
     case "$1" in
         forge) echo "Forge" ;;
@@ -132,7 +132,8 @@ upload_curseforge() {
         echo "  curseforge: skipped (set mod.publish_curseforge and CURSEFORGE_TOKEN)"
         return 0
     fi
-    local cf_versions="$game_versions,$(curseforge_loader "$loader")"
+    # CurseForge rejects uploads without an environment selection; the mod runs on both sides.
+    local cf_versions="$game_versions,Client,Server,$(curseforge_loader "$loader")"
     local metadata
     metadata=$(cat <<JSON
 {
